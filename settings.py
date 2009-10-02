@@ -15,11 +15,11 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(KIT_ROOT, 'saaskit.db')  # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'wip'  # Or path to database file if using sqlite3.
+DATABASE_USER = 'django'             # Not used with sqlite3.
+DATABASE_PASSWORD = '1234'         # Not used with sqlite3.
+DATABASE_HOST = 'localhost'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'quotas',
     'subscription',
     'yql',
+    'livesearch',
     # local
     'saaskit',
     # only in development 
@@ -259,3 +260,5 @@ try:
      from local_settings import *
 except ImportError:
      pass
+
+APPID = "93FBF6EE55FB2DAC0EAE387DD73A425E245D3B99"
