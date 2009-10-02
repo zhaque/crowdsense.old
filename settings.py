@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'prepaid',
     'quotas',
     'subscription',
+    'yql',
     # local
     'saaskit',
     # only in development 

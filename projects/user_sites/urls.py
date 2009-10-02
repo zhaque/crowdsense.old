@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^extend/password/$', 'django.views.generic.simple.direct_to_template', dict(template='account_password.html')),
     url(r'^extend/plans/$', 'django.views.generic.simple.direct_to_template', dict(template='account_plans.html')),
     url(r'^extend/invoice/$', 'django.views.generic.simple.direct_to_template', dict(template='account_invoice.html')),
+    (r'^yql/', include('yql.urls')),
 )
 
 # serve static files in debug mode
