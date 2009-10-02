@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     'subscription',
     'yql',
     'livesearch',
+    'tracker',
     # local
     'saaskit',
     # only in development 
