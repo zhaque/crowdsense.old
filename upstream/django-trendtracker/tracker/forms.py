@@ -1,4 +1,5 @@
 from django import forms
+from tracker.models import Tracker, Trend
 
 class SourceListForm(forms.Form):
   users = forms.MultipleChoiceField(choices=())
@@ -14,3 +15,13 @@ class SourceListForm(forms.Form):
 
   def as_simpleinput(self):
     return self._html_output(u'%(field)s%(help_text)s', u'%s', '', u' %s', True)
+
+class TrackerForm(forms.ModelForm):
+  class Meta:
+    model = Tracker
+    fields = ('name', 'query', 'description', 'packs', 'is_public')
+
+class TrendForm(forms.ModelForm):
+  class Meta:
+    model = Trend
+    fields = ('name', 'description', 'trackers')
