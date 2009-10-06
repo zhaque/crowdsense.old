@@ -1,25 +1,26 @@
 {% extends "main.html" %}
+{% load smartif %}
 {% block title %}Manage your site{% endblock %} 
 {% block head %}
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.min.js"></script> 
   <script type="text/javascript">
   $(document).ready(function(){
 
-	$(".slideLink1").click(function(){
-	  $("#pack1").slideToggle("normal").siblings("#pack2,#pack3").slideUp("slow");          
+	{% for pack in packs %}
+	$(".packSlide{{ pack.id }}").click(function(){
+	  $("#pack{{ pack.id }}").slideToggle("normal").siblings().slideUp("slow");          
 	  $(this).toggleClass("active");
-           $(this).siblings("#pack2,#pack3").removeClass("active");
+           $(this).siblings().removeClass("active");
 	});
-        $(".slideLink2").click(function(){
-	  $("#pack2").slideToggle("normal").siblings("#pack1,#pack3").slideUp("slow");          
+	{% endfor %}
+	{% for trend in trends %}
+	$(".trendSlide{{ trend.id }}").click(function(){
+	  $("#trend{{ trend.id }}").slideToggle("normal").siblings().slideUp("slow");          
 	  $(this).toggleClass("active");
-          $(this).siblings("#pack1,#pack3").removeClass("active");
+           $(this).siblings().removeClass("active");
 	});
-       $(".slideLink3").click(function(){          
-	  $("#pack3").slideToggle("normal").siblings("#pack1,#pack2").slideUp("slow");          
-	  $(this).toggleClass("active");
-          $(this).siblings("#pack1,#pack2").removeClass("active");
-	});
+	{% endfor %}
+	
   });
   </script>
 {% endblock %}
@@ -34,46 +35,30 @@
 <div class="block">
 <div class="bd">
      <h2>Packs</h2>
+     {% if packs %}
+     <form action="" method="post">
      <ul id="packs">
-       <li><a href="#" class="slideLink1">Social</a></li>      
-       <li><a href="#" class="slideLink2">Entertainment</a></li>
-       <li><a href="#" class="slideLink3">Politics</a></li>
-        
+     {% for pack in packs %}
+       <li><input type="checkbox" name="packs" value="{{ pack.id }}" {% if request.muaccount in pack.muaccounts.all %}checked="checked"{% endif %} /><a href="#" class="packSlide{{ pack.id }}">{{ pack }}</a></li>      
+     {% endfor %}
      </ul>
      <div class="expandable">
-      <div id="pack1" style="display: none;">
+     {% for pack in packs %}
+      <div id="pack{{ pack.id }}" style="display: none;">
+         {% if pack.description %}{{ pack.description }}{% endif %}
          <ul>
-           <li>Twitter</li>
-           <li>Facebook</li>
-           <li>Bing</li>
+         {% for channel in pack.channels.all %}
+           <li>{{ channel }}{% if channel.description %} - {{ channel.description }}{% endif %}</li>
+         {% endfor %}
          </ul>
        </div>
-     <div id="pack2" style="display: none;">
-         <ul>
-           <li>TV</li>
-           <li>Gamespot</li>
-           <li>Music</li>
-         </ul>
-       </div>
-     <div id="pack3" style="display: none;">
-         <ul>
-           <li>Obama</li>
-           <li>Blair</li>
-           <li>something</li>
-         </ul>
-       </div>
+     {% endfor %}
     </div>
+     <input type="submit" value="save"/>
+     </form>
+     {% endif %}
     <br />
-    <p style="margin-bottom:0.5em;"><em>You are using 3 of 5 available packs. There are other packs suitable for you:</em></p>
-    <ul id="packs" style="font-size:80%; margin-bottom:0.5em;">
-     <li><a href="">Pack4</a></li>
-     <li><a href="">Pack5</a></li>
-     <li><a href="">Pack6</a></li>
-     <li><a href="">Pack7</a></li>
-     <li><a href="">Pack8</a></li>
-     <li><a href="">Pack9</a></li>
-     <li><a href="">Pack10</a></li>
-    </ul>
+    <p style="margin-bottom:0.5em;"><em>You are using {{ packs_used }} of {{ request.muaccount.owner.quotas.muaccount_packs }} available packs. There are other packs suitable for you:</em></p>
     <p style="font-size:110%;"><em><a href="">Upgrade</a> your plan for other packs</em></p>
 </div>
 </div>
@@ -81,14 +66,43 @@
 <div class="block">
 <div class="bd">
   <h2>Trackers</h2>
-   <ul id="trackers">
-       <li><a href="#" class="slideLink1">tracker1</a></li>      
-       <li><a href="#" class="slideLink">tracker2</a></li>
-       <li><a href="#" class="slideLink">tracker3</a></li>
-       <li><a href="http://silver.yonotes.com/tracker/" class="slideLink">see more here</a></li>
-     </ul>
+    {% if trackers %}
+    <ul id="trackers">
+      {% for tracker in trackers %}
+      <li><a href="{% url tracker_edit tracker.id %}">{{ tracker }}</a></li>      
+      {% endfor %}
+      <li><a href="{% url tracker_index %}">see more here</a></li>
+    </ul>
+   {% endif %}
   <br />
-  <p>You're allowed 10 trackers. <a href="">Upgrade</a> your plan for more</p>
+  <p>You're allowed {{ request.muaccount.owner.quotas.muaccount_trackers }} trackers. <a href="">Upgrade</a> your plan for more</p>
+</div>
+</div>
+
+<div class="block">
+<div class="bd">
+  <h2>Trends</h2>
+    {% if trends %}
+    <ul id="trackers">
+      {% for trend in trends %}
+      <li><a href="#" class="trendSlide{{ trend.id }}">{{ trend }}</a></li>      
+      {% endfor %}
+      <li><a href="{% url tracker_trend_index %}">see more here</a></li>
+    </ul>
+     <div class="expandable">
+     {% for trend in trends %}
+      <div id="trend{{ trend.id }}" style="display: none;">
+         {% if trend.description %}{{ trend.description }}{% endif %}
+         <ul>
+         {% for tracker in trend.trackers.all %}
+           <li>{{ tracker }}{% if tracker.description %} - {{ tracker.description }}{% endif %}</li>
+         {% endfor %}
+         </ul>
+       </div>
+     {% endfor %}
+    </div>
+   {% endif %}
+  <br />
 </div>
 </div>
 

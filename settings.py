@@ -183,6 +183,8 @@ SUBSCRIPTION_PAYPAL_SETTINGS = {
 
 QUOTAS = {
     'muaccount_members' : (3, 10, 50),
+    'muaccount_trackers' : (5, 20, 50),
+    'muaccount_packs' : (3, 5, 10),
     }
 
 MUACCOUNTS_ROOT_DOMAIN = 'example.com'
