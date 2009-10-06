@@ -201,12 +201,9 @@ MUACCOUNTS_THEMES = (
         ('tan-blue', 'Tan Blue', 'yui-app-theme/tan_blue.css'),
 	('default', 'CrowdSense', 'saaskit/css/default.css'),
 	('fireflynight', 'Firefly Night', 'saaskit/css/fireflynight.css'),
-        ('freshair', 'Fresh Air', 'saaskit/css/freshair.css'),
-	('girly', 'Girly', 'saaskit/css/girly.css'),
 	('grayscale', 'Grayscale', 'saaskit/css/grayscale.css'),
 	('grayscalem', 'Grayscale Modified', 'saaskit/css/grayscalemodified.css'),
 	('overcast', 'Overcast', 'saaskit/css/overcast.css'),
-	('pepper', 'Pepper', 'saaskit/css/pepper.css'),
 	('sunshine', 'Sunshine', 'saaskit/css/sunshine.css'),
         )),
     # <body> id

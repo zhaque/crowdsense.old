@@ -5,6 +5,14 @@
 #user-nav li {display: inline; padding: 0; margin: 0; }
 #user-nav li a {color:#fff; font-weight:600;}
 
+#sidebar {font-size:95%;}
+
+.block .headerNav {background:#000000; height:2.2em;}
+.block .headerNav li {display:inline; padding:0.3em 0.5em 0.3em 0.5em; float:right; margin-top:0.3em;}
+.block .headerNav li a {color:#fff; font-weight:700; font-size:110%;}
+
+#packs li {display:inline; font-size:105%; margin-left:0.3em; margin-right:0.3em;}
+#trackers li {display:inline; font-size:100%; margin-left:0.3em; margin-right:0.3em;}
 
 #button {width:270px; height:50px; background-color:#000000; padding: 5px 1px 1px 1px;}
 #button p {color:#FFFFFF; font-size:20px; text-align:center; font-weight:800; margin-bottom:1px;}
@@ -75,19 +83,8 @@ text-decoration:none;
 
 .table-font {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:110%;}
 .big { font-size:140%; font-family:"Garamond Premr Pro", Arial, sans-serif; font-style:italic; color:#333333;}
-
+.grey {background:#CCC;}
 #owner-nav { float:right; margin: 5px 0 0 0; color:#ffffff; clear:both;}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

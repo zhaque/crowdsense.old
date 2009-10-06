@@ -1,11 +1,112 @@
 {% extends "main.html" %}
 {% block title %}Manage your site{% endblock %} 
+{% block head %}
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.min.js"></script> 
+  <script type="text/javascript">
+  $(document).ready(function(){
+
+	$(".slideLink1").click(function(){
+	  $("#pack1").slideToggle("normal").siblings("#pack2,#pack3").slideUp("slow");          
+	  $(this).toggleClass("active");
+           $(this).siblings("#pack2,#pack3").removeClass("active");
+	});
+        $(".slideLink2").click(function(){
+	  $("#pack2").slideToggle("normal").siblings("#pack1,#pack3").slideUp("slow");          
+	  $(this).toggleClass("active");
+          $(this).siblings("#pack1,#pack3").removeClass("active");
+	});
+       $(".slideLink3").click(function(){          
+	  $("#pack3").slideToggle("normal").siblings("#pack1,#pack2").slideUp("slow");          
+	  $(this).toggleClass("active");
+          $(this).siblings("#pack1,#pack2").removeClass("active");
+	});
+  });
+  </script>
+{% endblock %}
+
 {% block body %}
   <div class="block">
     <div class="bd">
      <h2>Application Settings</h2>
      <h4>This will be a place holder to allow application specific settings </h4>
+     
 </div></div>
+<div class="block">
+<div class="bd">
+     <h2>Packs</h2>
+     <ul id="packs">
+       <li><a href="#" class="slideLink1">Social</a></li>      
+       <li><a href="#" class="slideLink2">Entertainment</a></li>
+       <li><a href="#" class="slideLink3">Politics</a></li>
+        
+     </ul>
+     <div class="expandable">
+      <div id="pack1" style="display: none;">
+         <ul>
+           <li>Twitter</li>
+           <li>Facebook</li>
+           <li>Bing</li>
+         </ul>
+       </div>
+     <div id="pack2" style="display: none;">
+         <ul>
+           <li>TV</li>
+           <li>Gamespot</li>
+           <li>Music</li>
+         </ul>
+       </div>
+     <div id="pack3" style="display: none;">
+         <ul>
+           <li>Obama</li>
+           <li>Blair</li>
+           <li>something</li>
+         </ul>
+       </div>
+    </div>
+    <br />
+    <p style="margin-bottom:0.5em;"><em>You are using 3 of 5 available packs. There are other packs suitable for you:</em></p>
+    <ul id="packs" style="font-size:80%; margin-bottom:0.5em;">
+     <li><a href="">Pack4</a></li>
+     <li><a href="">Pack5</a></li>
+     <li><a href="">Pack6</a></li>
+     <li><a href="">Pack7</a></li>
+     <li><a href="">Pack8</a></li>
+     <li><a href="">Pack9</a></li>
+     <li><a href="">Pack10</a></li>
+    </ul>
+    <p style="font-size:110%;"><em><a href="">Upgrade</a> your plan for other packs</em></p>
+</div>
+</div>
+
+<div class="block">
+<div class="bd">
+  <h2>Trackers</h2>
+   <ul id="trackers">
+       <li><a href="#" class="slideLink1">tracker1</a></li>      
+       <li><a href="#" class="slideLink">tracker2</a></li>
+       <li><a href="#" class="slideLink">tracker3</a></li>
+       <li><a href="http://silver.yonotes.com/tracker/" class="slideLink">see more here</a></li>
+     </ul>
+  <br />
+  <p>You're allowed 10 trackers. <a href="">Upgrade</a> your plan for more</p>
+</div>
+</div>
+
+<div class="block">
+<div class="bd">
+  <h2>Other Apps</h2>
+  <form action="#" method="post">
+  <p>Choose whether you want Scratchpad, Tasks or nothing</p>
+  <input type="radio" name="apps" value="both" /> Scratchpad & Tasks
+<br />
+<input type="radio" name="apps" value="scratchpad" /> Scratchpad
+<br />
+<input type="radio" name="apps" value="nothing" /> Nothing
+<p><input type="submit" value="Save!">
+<br />
+  </form>
+</div>
+</div> 
 {% endblock %}
 {% block sidebar %}
 
@@ -21,6 +122,22 @@
  
   
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
