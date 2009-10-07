@@ -128,8 +128,29 @@ class Query(models.Model):
     def __unicode__(self):
         return '%s in %s' % (self.query, self.channel)
 
-#class RawResult(models.Model):
-#    result
-#    channel
-#    timestamp
+class RawResult(models.Model):
+    result = models.TextField()
+    channel = models.ForeignKey(Channel, related_name="raw_results")
+    createddate = models.DateTimeField('creation date', auto_now_add=True)
+
+class TwitterResult(models.Model):
+    iso_language_code = models.CharField(max_length=5)
+    text = models.CharField(max_length=255)
+#    created_at = models.CharField(max_length=255)
+#    profile_image_url = models.CharField(max_length=255)
+    source = models.CharField(max_length=255)
+    from_user = models.CharField(max_length=255)
+    from_user_id = models.CharField(max_length=255)
+    to_user_id = models.CharField(max_length=255, blank=True, null=True)
+    tweet_id = models.CharField(max_length=255)
+
+#class KeyValue(models.Model):
+#    key = models.CharField(max_length=255)
+#    value = models.CharField(max_length=255)
 #
+#class ParsedResult(models.Model):
+#    channel = models.ForeignKey(Channel, related_name="parsed_results")
+#    key_values = models.ManyToManyField(KeyValue)
+#    createddate = models.DateTimeField('creation date', auto_now_add=True)
+
+
