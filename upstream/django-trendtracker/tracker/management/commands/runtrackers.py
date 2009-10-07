@@ -1,42 +1,54 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
-from django.core.management.base import NoArgsCommand
-from tracker.models import Tracker, Channel
+from django.core.management.base import LabelCommand
+from tracker.models import Tracker, Channel, Query
 from livesearch.models import *
 from yql.search import *
 
-class Command(NoArgsCommand):
+class Command(LabelCommand):
     help = 'Runs trackers.'
-    channels = dict()
+    args = 'inject,fetch,parse,index'
+    label = 'inject,fetch,parse,index'
+
+    INJECT = 'inject'
+    FETCH = 'fetch'
+    PARSE = 'parse'
+    INDEX = 'index'
     
-    def handle_noargs(self, **options):
-        self.inject()
-        self.fetch()
-        self.parse()
-        self.index()
+    def handle_label(self, label, **options):
+        if self.INJECT == label:
+            self.inject()
+        elif self.FETCH == label:
+            self.fetch()
+        elif self.PARSE == label:
+            self.parse()
+        elif self.INDEX == label:
+            self.index()
+        else:
+            print 'Valid arguments are %s' % self.args
 
     def inject(self):
         pending_trackers = Tracker.objects.filter(status=Tracker.PENDING)
         for tracker in pending_trackers:
             for pack in tracker.packs.all():
               for channel in pack.channels.all():
-                  if channel.id in self.channels:
-                      self.channels[channel.id].append(tracker.query)
-                  else:
-                      self.channels[channel.id] = [tracker.query,]
-
-        for id, queries in self.channels.items():
-            self.channels[id] = list(set(queries))
+                  try:
+                      q = Query.objects.get(query = tracker.query, channel=channel)
+                  except ObjectDoesNotExist:
+                      q = Query()
+                      q.query = tracker.query
+                      q.channel = channel
+                      q.save()
 
     def fetch(self):
-        for channel_id, queries in self.channels.items():
-            channel = Channel.objects.get(id=channel_id)
-            api_class = globals()[channel.api]
+        queries = Query.objects.all()
+        for query in queries:
+            api_class = globals()[query.channel.api]
             api = api_class()
             if issubclass(api_class, PipeSearch):
                 api.init_options()
-            for query in queries:
-                result = api.fetch(query)
-                print result
+            result = api.fetch(query.query)
+            print result
 
     def parse(self):
         pass
