@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     (r'^yql/', include('yql.urls')),
     (r'^livesearch/', include('livesearch.urls')),
     (r'^tracker/', include('tracker.urls')),
+    url(r'^search/$', 'django.views.generic.simple.direct_to_template', dict(template='search.html')),
 )
 
 # serve static files in debug mode
