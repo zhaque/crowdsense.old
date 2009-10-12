@@ -11,6 +11,7 @@ django-rosetta
 django-sso
 django-tagging
 django-contact-form
+google-chartwrapper
 sorl-thumbnail
 python-dateutil*
 django-autoslug*
