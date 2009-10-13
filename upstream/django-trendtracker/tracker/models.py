@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from muaccounts.models import MUAccount
 
 from livesearch.models import *
@@ -156,10 +156,9 @@ class ParsedResult(models.Model):
 
 class Statistics(models.Model):
     daily_change = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    total_today = models.PositiveIntegerField(blank=True, null=True)
-    total_this_week = models.PositiveIntegerField(blank=True, null=True)
+    total_24hours = models.PositiveIntegerField(blank=True, null=True)
+    total_7days = models.PositiveIntegerField(blank=True, null=True)
     daily_average = models.IntegerField(blank=True, null=True)
-    latest = models.ForeignKey(ParsedResult, blank=True, null=True)
     most_active_source = models.CharField(max_length=255, blank=True, null=True)
 
     @property
@@ -182,7 +181,46 @@ class Statistics(models.Model):
     def __unicode__(self):
       return '%s' % self.owner
 
-class TrendStatistics(models.Model):
+class StatisticMethods:
+    def get_tracker(self):
+        pass
+
+    def count_stats(self):
+        if not self.stats:
+            stats = Statistics()
+            stats.save()
+            self.stats = stats
+        self.stats.daily_change = self.count_daily_change()
+        self.stats.total_24hours = self.count_total_24hours()
+        self.stats.total_7days = self.count_total_7days()
+        self.stats.daily_average = self.count_daily_average()
+        self.stats.save()
+
+    def count_daily_change(self):
+        today = self.count_total_24hours()
+        yesterday = self.count_total_mentions(datetime.now()-timedelta(days=2)) - today
+        if 0 == yesterday:
+            return None
+        print float(today-yesterday)/yesterday*100
+        return '%s' % (float(today-yesterday)/yesterday*100)
+        
+    def count_daily_average(self):
+        start = self.get_tracker().startdate
+        delta = (datetime.now() - start).days + 1
+        total = self.count_total_mentions(start)
+        return total/delta
+        
+    def count_total_7days(self):
+        return self.count_total_mentions(datetime.now() - timedelta(days=7))
+
+    def count_total_24hours(self):
+        return self.count_total_mentions(datetime.now() - timedelta(days=1))
+
+    def count_total_mentions(self, startdate):
+        total = 0
+        return total
+
+class TrendStatistics(models.Model, StatisticMethods):
     created_date = models.DateTimeField('creation date', auto_now_add=True)
     trend = models.OneToOneField(Trend)
     stats = models.OneToOneField(Statistics, blank=True, null=True, related_name='trend')
@@ -194,15 +232,18 @@ class TrendStatistics(models.Model):
     def __unicode__(self):
         return '%s' % self.trend
 
-    def count_stats(self):
-        if not self.stats:
-            stats = Statistics()
-            stats.save()
-            self.stats = stats
-        self.stats.daily_change = '10.54'
-        self.stats.save()
+    def count_daily_average(self):
+        return None
+
+    def count_total_mentions(self, startdate):
+        total = 0
+        for tracker in self.trend.trackers.all():
+          for pack in tracker.packs.all():
+            for channel in pack.channels.all():
+              total += ParsedResult.objects.filter(query=tracker.query, channel=channel, date__gte=startdate).count()
+        return total
     
-class TrackerStatistics(models.Model):
+class TrackerStatistics(models.Model, StatisticMethods):
     created_date = models.DateTimeField('creation date', auto_now_add=True)
     tracker = models.ForeignKey(Tracker, related_name='stats')
     stats = models.OneToOneField(Statistics, blank=True, null=True, related_name='tracker')
@@ -216,15 +257,17 @@ class TrackerStatistics(models.Model):
     def __unicode__(self):
         return '%s' % self.tracker
 
-    def count_stats(self):
-        if not self.stats:
-            stats = Statistics()
-            stats.save()
-            self.stats = stats
-        self.stats.daily_change = '8.88'
-        self.stats.save()
+    def get_tracker(self):
+        return self.tracker
 
-class PackStatistics(models.Model):
+    def count_total_mentions(self, startdate):
+        total = 0
+        for pack in self.tracker.packs.all():
+          for channel in pack.channels.all():
+            total += ParsedResult.objects.filter(query=self.tracker.query, channel=channel, date__gte=startdate).count()
+        return total
+
+class PackStatistics(models.Model, StatisticMethods):
     created_date = models.DateTimeField('creation date', auto_now_add=True)
     pack = models.ForeignKey(Pack, related_name='stats')
     stats = models.OneToOneField(Statistics, blank=True, null=True, related_name='pack')
@@ -238,15 +281,17 @@ class PackStatistics(models.Model):
     def __unicode__(self):
         return '%s' % self.pack
 
-    def count_stats(self):
-        if not self.stats:
-            stats = Statistics()
-            stats.save()
-            self.stats = stats
-        self.stats.daily_change = '5.55'
-        self.stats.save()
+    def get_tracker(self):
+        return self.trackerstats.tracker
 
-class ChannelStatistics(models.Model):
+    def count_total_mentions(self, startdate):
+        total = 0
+        for channel in self.pack.channels.all():
+          total += ParsedResult.objects.filter(query=self.get_tracker().query, channel=channel, date__gte=startdate).count()
+        return total
+
+
+class ChannelStatistics(models.Model, StatisticMethods):
     created_date = models.DateTimeField('creation date', auto_now_add=True)
     channel = models.ForeignKey(Channel, related_name='stats')
     stats = models.OneToOneField(Statistics, blank=True, null=True, related_name='channel')
@@ -260,12 +305,10 @@ class ChannelStatistics(models.Model):
     def __unicode__(self):
         return '%s' % self.channel
 
-    def count_stats(self):
-        if not self.stats:
-            stats = Statistics()
-            stats.save()
-            self.stats = stats
-        self.stats.daily_change = '2.34'
-        self.stats.save()
+    def get_tracker(self):
+        return self.packstats.trackerstats.tracker
 
+    def count_total_mentions(self, startdate):
+        total = ParsedResult.objects.filter(query=self.get_tracker().query, channel=self.channel, date__gte=startdate).count()
+        return total
 
