@@ -1,0 +1,82 @@
+{% extends "main.html" %}
+
+{% load threadedcommentstags %}
+
+
+
+{% block head %}
+<script type="text/javascript">
+function show_reply_form(comment_id, url, person_name) {
+    var comment_reply = $('#' + comment_id);
+    var to_add = $( new Array(
+    '<div class="response"><p>Reply to ' + person_name + ':</p>',
+    '<form method="POST" action="' + url + '">',
+    {% get_threaded_comment_form as form %}
+    '<ul>',  '{{ form.as_ul|oneline }}',
+    '<li><input type="submit" value="Submit Comment" /></li>',
+    '</ul>', '</form>', '</div>').join(''));
+    to_add.css("display", "none");
+    comment_reply.after(to_add);
+    to_add.slideDown(function() {
+        comment_reply.replaceWith(new Array('<a id="',
+        comment_id,'" href="javascript:hide_reply_form(\'',
+        comment_id, '\',\'', url, '\',\'', person_name,
+        '\')">Stop Replying</a>').join(''));
+    });
+}
+function hide_reply_form(comment_id, url, person_name) {
+    var comment_reply = $('#' + comment_id);
+    comment_reply.next().slideUp(function (){
+        comment_reply.next('.response').remove();
+        comment_reply.replaceWith(new Array('<a id="',
+        comment_id,'" href="javascript:show_reply_form(\'',
+        comment_id, '\',\'', url, '\',\'', person_name,
+        '\')">Reply</a>').join(''));
+    });
+}
+</script>
+{% endblock %}
+
+{% block body %}
+
+
+<h1>ScratchPad: <a href="{% url scratchpad-scratchpad_view item.scratchpad.id%}">{{item.scratchpad}}</a></h1>
+<h2>Item: {{item}}</h2>
+
+<a href="{% url todo-incomplete_tasks item.scratchpad.tasks_list.id item.scratchpad.tasks_list.slug %}">View tasks</a>
+
+{% autoescape off %}
+<div>{{item.notes}}</div>
+{% endautoescape %}
+
+<a href="{% url todo-incomplete_tasks item.scratchpad.tasks_list.id item.scratchpad.tasks_list.slug %}">View tasks</a>
+
+{% for item in pad.item_set.all %}
+<h3><a href="{% url scratchpad-item item.id%}">{{ item }}</a></h3>
+{% autoescape off %}
+<div>{{item.notes}}</div>
+{% endautoescape %}
+<hr>
+
+{% endfor %}
+
+    <h3>Comments on This Item:</h3>
+    {% get_threaded_comment_tree for item as tree %}
+    {% for comment in tree %}
+        <div style="margin-left: {{ comment.depth }}em;" class="comment">
+            {{ comment.user }} said:<br/>
+            {% auto_transform_markup comment %}
+        </div>
+		<a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url item comment %}','{{ comment.name }}')">Reply</a>
+
+    {% endfor %}
+    <p>Reply to Original:</p>
+    <form method="POST" action="{% get_comment_url item %}">
+        <ul>
+        {% get_threaded_comment_form as form %}
+            {{ form.as_ul }}
+            <li><input type="submit" value="Submit Comment" /></li>
+        </ul>
+    </form>
+
+{% endblock %}

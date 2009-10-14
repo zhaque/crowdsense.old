@@ -103,6 +103,9 @@ INSTALLED_APPS = (
     'yql',
     'livesearch',
     'tracker',
+    'todo',
+    'threadedcomments',
+    'scratchpad',
     # local
     'saaskit',
     # only in development 

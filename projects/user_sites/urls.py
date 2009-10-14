@@ -23,6 +23,9 @@ urlpatterns = patterns('',
     (r'^yql/', include('yql.urls')),
     (r'^livesearch/', include('livesearch.urls')),
     (r'^tracker/', include('tracker.urls')),
+    (r'^todo/', include('todo.urls')),
+    (r'^comments/', include('threadedcomments.urls')),
+    (r'^scratchpad/', include('scratchpad.urls')),
     url(r'^search/$', 'django.views.generic.simple.direct_to_template', dict(template='search.html')),
 )
 
