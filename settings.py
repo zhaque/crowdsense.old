@@ -269,3 +269,5 @@ except ImportError:
      pass
 
 APPID = "93FBF6EE55FB2DAC0EAE387DD73A425E245D3B99"
+
+SOLR_URL = "http://yonotes.com:8983/solr/"
