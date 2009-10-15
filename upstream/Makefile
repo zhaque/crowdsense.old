@@ -12,6 +12,7 @@ DJANGO_PISTON_RELEASE=0.2.2
 DJANGO_ROSETTA_RELEASE=67
 DJANGO_SSO_RELEASE=3
 GOOGLE_CHARTWRAPPER=218
+PYSOLR=27
 SORL_THUMBNAIL_RELEASE=449
 SOUTH_RELEASE=64cde35ab459
 DATEUTIL_VERSION=1.4.1
@@ -28,6 +29,7 @@ init: _submodules.stamp \
 	django-sso.stamp \
 	django-tagging.stamp \
 	google-chartwrapper.stamp \
+	pysolr.stamp \
 	sorl-thumbnail.stamp \
         south.stamp \
         dateutils.stamp
@@ -103,6 +105,10 @@ django-tagging.stamp:
 
 google-chartwrapper.stamp:
 	svn checkout -r $(GOOGLE_CHARTWRAPPER) http://google-chartwrapper.googlecode.com/svn/trunk/ google-chartwrapper
+	date > $@
+
+pysolr.stamp:
+	svn checkout -r $(PYSOLR) http://pysolr.googlecode.com/svn/trunk/ pysolr
 	date > $@
 
 south.stamp:
