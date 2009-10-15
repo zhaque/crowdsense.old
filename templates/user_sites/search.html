@@ -50,23 +50,23 @@
             // result
             $sj.each(docs, function(i, item) {
               jQuery("<h2/>").html(item["title"]).appendTo(container);
-              var topics = jQuery("<p/>").appendTo(container);
-              if (item["topics"] != null) {
-                $sj.each(item["topics"], function(i, topic) {
-                  var items =  "[new jQuery.solrjs.QueryItem({field:'topics',value:'" +  topic + "'})]";
-                  jQuery("<a/>").html(topic).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(topics);
+              var channels = jQuery("<p/>").appendTo(container);
+              if (item["channels"] != null) {
+                $sj.each(item["channels"], function(i, channel) {
+                  var items =  "[new jQuery.solrjs.QueryItem({field:'channels',value:'" +  channel + "'})]";
+                  jQuery("<a/>").html(channel).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(channels);
                 }); 
               }
-              if (item["organisations"] != null) {
-                $sj.each(item["organisations"], function(i, topic) {
-                  var items =  "[new jQuery.solrjs.QueryItem({field:'organisations' ,value:'" +  topic + "'})]";
-                  jQuery("<a/>").html(topic).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(topics);
+              if (item["trackers"] != null) {
+                $sj.each(item["trackers"], function(i, channel) {
+                  var items =  "[new jQuery.solrjs.QueryItem({field:'trackers' ,value:'" +  channel + "'})]";
+                  jQuery("<a/>").html(channel).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(channels);
                 }); 
               }
-              if (item["exchanges"] != null) {
-                $sj.each(item["exchanges"], function(i, topic) {
-                  var items =  "[new jQuery.solrjs.QueryItem({field:'exchanges' ,value:'" +  topic + "'})]";
-                  jQuery("<a/>").html(topic).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(topics);
+              if (item["packs"] != null) {
+                $sj.each(item["packs"], function(i, channel) {
+                  var items =  "[new jQuery.solrjs.QueryItem({field:'packs' ,value:'" +  channel + "'})]";
+                  jQuery("<a/>").html(channel).attr("href", "javascript:solrjsManager.clearSelection();solrjsManager.selectItems('result'," + items + ")").appendTo(channels);
                 }); 
               }
               if (item["text"].length > 300) {
@@ -82,12 +82,13 @@
         });     
         solrjsManager.addWidget(resultWidget);  
         
-        solrjsManager.addWidget(new $sj.solrjs.AutocompleteWidget({id:"search", target:"#search", fulltextFieldName:"allText", fieldNames:["topics", "organisations", "exchanges"]}));
-        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"topics", target:"#topics", fieldName:"topics", size:50})); 
-        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"organisations", target:"#organisations", fieldName:"organisations", size:20}));
-        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"exchanges", target:"#exchanges", fieldName:"exchanges", size:20}));
-        solrjsManager.addWidget(new $sj.solrjs.CountryCodeWidget({id:"countries", target:"#countries", fieldName:"countryCodes"}));  
-        solrjsManager.addWidget(new $sj.solrjs.CalendarWidget({id:"calendar", target:"#calendar", fieldName:"date", startDate: new Date(1987,01,01), endDate: new Date(1987,10,31)}));
+        solrjsManager.addWidget(new $sj.solrjs.AutocompleteWidget({id:"search", target:"#search", fulltextFieldName:"allText", fieldNames:["channel", "tracker", "packs", "trends"]}));
+        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"channels", target:"#channels", fieldName:"channel", size:50})); 
+        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"trackers", target:"#trackers", fieldName:"tracker", size:20}));
+        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"packs", target:"#packs", fieldName:"packs", size:20}));
+        solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"trends", target:"#trends", fieldName:"trends", size:20}));
+//        solrjsManager.addWidget(new $sj.solrjs.CountryCodeWidget({id:"countries", target:"#countries", fieldName:"countryCodes"}));  
+        solrjsManager.addWidget(new $sj.solrjs.CalendarWidget({id:"date", target:"#date", fieldName:"date", startDate: new Date(1987,01,01), endDate: new Date(2010,10,31)}));
         
         var selectionView = new $sj.solrjs.AbstractSelectionView({
           id:"selectionView", 
@@ -144,17 +145,21 @@
             <div id="search"></div> 
           </li>
         </ul>
-        <h2>Top Topics</h2>
+        <h2>Top Channels</h2>
         <ul>
-          <li> <div id="topics"></div> </li>
+          <li> <div id="channels"></div> </li>
         </ul>
-        <h2>Top Organisations</h2>
+        <h2>Top Trackers</h2>
         <ul>
-          <li> <div id="organisations"></div> </li>
+          <li> <div id="trackers"></div> </li>
         </ul>
-        <h2>Top Exchanges</h2>
+        <h2>Top Packs</h2>
         <ul>
-          <li> <div id="exchanges"></div> </li>
+          <li> <div id="packs"></div> </li>
+        </ul>
+        <h2>Top Trends</h2>
+        <ul>
+          <li> <div id="trends"></div> </li>
         </ul>
         <h2>By Country</h2>
         <ul>
@@ -163,7 +168,7 @@
         </ul>
         <h2>By Date</h2>
         <ul>
-          <li> <div id="calendar" style="width:160px"></div> </li> 
+          <li> <div id="date" style="width:160px"></div> </li> 
         </ul>
         <div style="clear:both"></div>
       </div>
