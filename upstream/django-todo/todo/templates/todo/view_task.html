@@ -1,9 +1,7 @@
 {% extends "todo/base.html" %}
 
 {% block title %}Task: {{ task.title }}{% endblock %}
-
-{% block body %}
-
+{% block page_scripts %}
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -16,8 +14,9 @@ $(document).ready(function() {
     });
 });
 </script>
+{% endblock %}
 
-
+{% block body %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}

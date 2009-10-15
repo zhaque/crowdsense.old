@@ -2,8 +2,7 @@
 
 {% block title %}Todo List: {{ list.name }}{% endblock %}
 
-{% block body %}
-
+{% block page_scripts %}
 <script type="text/javascript">
 
 function order_tasks(data) {
@@ -12,7 +11,7 @@ function order_tasks(data) {
     // to save the re-ordered data into the database.
 
     $.post("{% url todo-reorder_tasks %}", data, "json");
-    return False;
+    return false;
 };
 
 $(document).ready(function() {
@@ -35,8 +34,9 @@ $(document).ready(function() {
 });
 
 </script>
+{% endblock %}
 
-
+{% block body %}
     {% ifequal list_slug "mine" %}
         <h1>Tasks assigned to {{ request.user }}</h1>
     {% else %}
