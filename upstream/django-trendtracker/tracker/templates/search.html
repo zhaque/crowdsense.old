@@ -1,11 +1,7 @@
+{% extends "main.html" %}
 {% block title %}SorlJS{% endblock %}
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="/media/search/css/style.css" media="screen" />
-    
-    <link rel="stylesheet" type="text/css" href="/media/search/js/css/solrjs.css" />
-    <link rel="stylesheet" type="text/css" href="/media/search/js/jquery-autocomplete/jquery.autocomplete.css" />
-
-    <script src="/media/authopenid/js/jquery-1.3.2.min.js"></script>
+{% block extra_scripts %}
+<!--    <script src="/media/authopenid/js/jquery-1.3.2.min.js"></script> -->
     <script src="/media/search/js/jquery-autocomplete/jquery.autocomplete.js"</script>
     <script src="/media/search/js/core/Core.js"></script>
     <script src="/media/search/js/core/QueryItem.js"></script>
@@ -16,15 +12,8 @@
     <script src="/media/search/js/core/AbstractClientSideWidget.js"></script>
     <script src="/media/search/js/clientside/ExtensibleResultWidget.js"/></script>
     <script src="/media/search/js/clientside/AutocompleteWidget.js"/></script>
-    <script src="/media/search/js/clientside/CalendarWidget.js"/></script>
     <script src="/media/search/js/clientside/TagcloudWidget.js"/></script>
-    <script src="/media/search/js/clientside/CountryCodeWidget.js"/></script>
-    
-    <link rel="stylesheet" type="text/css" media="all" href="../../lib/jscalendar/aqua/theme.css" title="Aqua" />
-    <script type="text/javascript" src="../../lib/jscalendar/calendar.js"></script>
-    <script type="text/javascript" src="../../lib/jscalendar/lang/calendar-en.js"></script>
-    
-    <script>
+        <script>
       var $sj = jQuery.noConflict();
       
       var solrjsManager;
@@ -87,8 +76,6 @@
         solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"trackers", target:"#trackers", fieldName:"tracker", size:20}));
         solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"packs", target:"#packs", fieldName:"packs", size:20}));
         solrjsManager.addWidget(new $sj.solrjs.TagcloudWidget({id:"trends", target:"#trends", fieldName:"trends", size:20}));
-//        solrjsManager.addWidget(new $sj.solrjs.CountryCodeWidget({id:"countries", target:"#countries", fieldName:"countryCodes"}));  
-        solrjsManager.addWidget(new $sj.solrjs.CalendarWidget({id:"date", target:"#date", fieldName:"date", startDate: new Date(1987,01,01), endDate: new Date(2010,10,31)}));
         
         var selectionView = new $sj.solrjs.AbstractSelectionView({
           id:"selectionView", 
@@ -120,11 +107,18 @@
        }
   </script>
 {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/media/search/css/style.css" media="screen" />
+    
+    <link rel="stylesheet" type="text/css" href="/media/search/js/css/solrjs.css" />
+    <link rel="stylesheet" type="text/css" href="/media/search/js/jquery-autocomplete/jquery.autocomplete.css" />
+
+{% endblock %}
 {% block body %}
     <div id="wrap"> 
       <div id="header">
-        <h1><a href="#">SolrJS Demonstration</a></h1>
-        <h2>Browse REUTERS business news from 1987</h2>
+        <h1><a href="#">SolrJS Search</a></h1>
       </div> 
       <div class="right">
         <div id="result">
@@ -160,15 +154,6 @@
         <h2>Top Trends</h2>
         <ul>
           <li> <div id="trends"></div> </li>
-        </ul>
-        <h2>By Country</h2>
-        <ul>
-          <li> <div id="countries"></div> </li>
-          <li> <div id="preview"></div> </li>
-        </ul>
-        <h2>By Date</h2>
-        <ul>
-          <li> <div id="date" style="width:160px"></div> </li> 
         </ul>
         <div style="clear:both"></div>
       </div>
