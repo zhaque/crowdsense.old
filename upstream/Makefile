@@ -13,6 +13,7 @@ DJANGO_ROSETTA_RELEASE=67
 DJANGO_SSO_RELEASE=3
 GOOGLE_CHARTWRAPPER=218
 PYSOLR=27
+GEOPY=84
 SORL_THUMBNAIL_RELEASE=449
 SOUTH_RELEASE=64cde35ab459
 DATEUTIL_VERSION=1.4.1
@@ -30,6 +31,7 @@ init: _submodules.stamp \
 	django-tagging.stamp \
 	google-chartwrapper.stamp \
 	pysolr.stamp \
+	geopy.stamp \
 	sorl-thumbnail.stamp \
         south.stamp \
         dateutils.stamp
@@ -109,6 +111,10 @@ google-chartwrapper.stamp:
 
 pysolr.stamp:
 	svn checkout -r $(PYSOLR) http://pysolr.googlecode.com/svn/trunk/ pysolr
+	date > $@
+
+geopy.stamp:
+	svn checkout -r $(GEOPY) http://geopy.googlecode.com/svn/trunk/ geopy
 	date > $@
 
 south.stamp:

@@ -13,6 +13,7 @@ django-tagging
 django-contact-form
 google-chartwrapper
 pysolr
+geopy
 sorl-thumbnail
 python-dateutil*
 django-autoslug*
