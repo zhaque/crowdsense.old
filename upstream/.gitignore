@@ -11,7 +11,8 @@ django-rosetta
 django-sso
 django-tagging
 django-contact-form
-google-chartwrapper
+gmaps-utility-library
+google-visualization-python
 pysolr
 geopy
 sorl-thumbnail

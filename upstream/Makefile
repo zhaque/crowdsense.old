@@ -11,7 +11,8 @@ DJANGO_TAGGING_RELEASE=155
 DJANGO_PISTON_RELEASE=0.2.2
 DJANGO_ROSETTA_RELEASE=67
 DJANGO_SSO_RELEASE=3
-GOOGLE_CHARTWRAPPER=218
+GOOGLE_VISUALIZATION_PYTHON=14
+GMAPS_UTILITY_LIBRARY=156
 PYSOLR=27
 GEOPY=84
 SORL_THUMBNAIL_RELEASE=449
@@ -29,7 +30,8 @@ init: _submodules.stamp \
 	django-rosetta.stamp \
 	django-sso.stamp \
 	django-tagging.stamp \
-	google-chartwrapper.stamp \
+	google-visualization-python.stamp \
+	gmaps-utility-library.stamp \
 	pysolr.stamp \
 	geopy.stamp \
 	sorl-thumbnail.stamp \
@@ -105,8 +107,12 @@ django-tagging.stamp:
 	svn checkout -r $(DJANGO_TAGGING_RELEASE) http://django-tagging.googlecode.com/svn/trunk/ django-tagging
 	date > $@
 
-google-chartwrapper.stamp:
-	svn checkout -r $(GOOGLE_CHARTWRAPPER) http://google-chartwrapper.googlecode.com/svn/trunk/ google-chartwrapper
+google-visualization-python.stamp:
+	svn checkout -r $(GOOGLE_VISUALIZATION_PYTHON) http://google-visualization-python.googlecode.com/svn/trunk/ google-visualization-python
+	date > $@
+
+gmaps-utility-library.stamp:
+	svn checkout -r $(GMAPS_UTILITY_LIBRARY) http://gmaps-utility-library.googlecode.com/svn/trunk/ gmaps-utility-library
 	date > $@
 
 pysolr.stamp:
