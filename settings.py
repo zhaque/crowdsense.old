@@ -85,7 +85,6 @@ INSTALLED_APPS = (
     'oembed',
     'templatesadmin', 
     'uni_form', 
-    'GChartWrapper.charts',
     # 3rd party apps currently not used
     # 'ab',
     # 'filter',
@@ -103,6 +102,7 @@ INSTALLED_APPS = (
     'yql',
     'livesearch',
     'tracker',
+    'stats',
     'todo',
     'threadedcomments',
     'scratchpad',
