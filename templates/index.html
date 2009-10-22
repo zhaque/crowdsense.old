@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load trackers %}
 
 {% block title %}Index{% endblock %}
 {% block head %}
@@ -104,6 +105,14 @@ ng in from all over the world as they happen — see the <strong>Quick Tour</str
                 <div class="block">
                     
                     <div class="bd">
+                        {% get_trackers 10 as tracker_list %}
+                        <h2>Public trackers</h2>
+                        <ul>
+                        {% for tracker in tracker_list %}
+                        <li>{{ tracker }}</li>
+                        {% endfor %}
+                        </ul>
+                        ---
                         <ul id="facts">
                                 <li>100% Browser-Based</li>
                             <li>No Install Needed</li>
