@@ -6,31 +6,35 @@
 <ul>
 {% for trend in trend_stats %}
 <li>
+  {% ifequal trend cur_trend %}
+  {{ trend.trend }}
+  {% else %}
   <a href="{% url stats_trend trend.id %}">{{ trend.trend }}</a>
-  {% for stat in trend.stats.all %}
-  <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
-  {% endfor %}
+  {% endifequal %}
   <ul>
 {% for tracker in trend.trackerstats.all %}
     <li>
+    {% ifequal tracker cur_tracker %}
     {{ tracker.tracker }}
-    {% for stat in tracker.stats.all %}
-    <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
-    {% endfor %}
+    {% else %}
+    <a href="{% url stats_tracker tracker.id %}">{{ tracker.tracker }}</a>
+    {% endifequal %}
       <ul>
     {% for pack in tracker.packstats.all %}
         <li>
+        {% ifequal pack cur_pack %}
+        {{ pack.pack }}
+        {% else %}
         <a href="{% url stats_pack pack.id %}">{{ pack.pack }}</a>
-        {% for stat in pack.stats.all %}
-        <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
-        {% endfor %}
+        {% endifequal %}
           <ul>
       {% for channel in pack.channelstats.all %}
             <li>
+            {% ifequal channel cur_channel %}
             {{ channel.channel }}
-            {% for stat in channel.stats.all %}
-            <a href="{% url tracker_list_stats_clicked stat.id %}">{{ stat.interval }}</a>
-            {% endfor %}
+            {% else %}
+            <a href="{% url stats_channel channel.id %}">{{ channel.channel }}</a>
+            {% endifequal %}
             </li>
       {% endfor %}
           </ul>
@@ -60,10 +64,14 @@
 <p>Most active: {{ cur_stats.most_active_source }}</p>
 {% endif %}
 
-{% include 'pie_chart.html' %}
+{% if cur_trend or cur_tracker or cur_channel%}
 {% include 'bar_chart.html' %}
 {% include 'column_chart.html' %}
 {% include 'line_chart.html' %}
+{% endif %}
+{% if cur_pack %}
+{% include 'pie_chart.html' %}
+{% endif %}
 
 {% if latest %}
 <h3>Latest mentions for {{ cur_stats }}</h3>
