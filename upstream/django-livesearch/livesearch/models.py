@@ -64,6 +64,35 @@ class PipeSearch(BaseSearch, pipes.Pipe):
             return resp
         return None
 
+class YqlSearch(PipeSearch):
+    uri = "http://query.yahooapis.com/v1/public/yql"
+
+    def init_options(self):
+        super(YqlSearch, self).init_options()
+        self.set_format()
+        self.set_env()
+
+    def set_query(self, query):
+        self.options.update({'q':query})
+
+    def set_format(self, format='json'):
+        self.options.update({'format':format})
+
+    def set_callback(self, callback):
+        self.options.update({'callback':callback})
+
+    def set_env(self, env='http://datatables.org/alltables.env'):
+        self.options.update({'env':env})
+
+    def get_result(self, response):
+        res = dict()
+        if response and hasattr(response, "query"):
+            res.update({'yql':response.query,})
+        elif response and hasattr(response, "error"):
+            res.update({'yql':response.error,})
+
+        return res
+
 class GoogleSearch(PipeSearch):
     uri = "http://ajax.googleapis.com/ajax/services/search/web"
 
@@ -87,6 +116,18 @@ class TwitterSearch(PipeSearch):
     def set_query(self, query):
         self.options.update({'q':query})
 
+    def set_count(self, count=100):
+        self.count = count
+        self.options.update({'rpp':count})
+
+    def set_offset(self, offset=0):
+        offset = int(offset)
+        page = int(offset/self.count) + 1
+        self.options.update({'page':page})
+
+    def set_market(self, market='en-US'):
+        self.options.update({'Market':market[:2]})
+
     def get_result(self, response):
         res = dict()
         if response and hasattr(response, "results"):
@@ -101,6 +142,7 @@ class BingMultiple(PipeSearch):
         self.options.update({
             'AppId':settings.APPID,
             'JsonType': 'raw',
+            'Options': 'DisableLocationDetection',
         })
         self.set_count()
         self.set_offset()
@@ -165,6 +207,18 @@ class BingRelated(BingMultiple):
 
 # BingNews searches news
 class BingNews(BingMultiple):
+    CATEGORIES = (
+        ('rt_Business','Business'),
+        ('rt_Entertainment','Entertainment'),
+        ('rt_Health','Health'),
+        ('rt_Political','Political'),
+        ('rt_Scientific','Scientific'),
+        ('rt_Sports','Sports'),
+        ('rt_US','US'),
+        ('rt_World','World'),
+        ('rt_Local','Local'),
+        ('rt_ScienceAndTechnology','Science and Technology'),
+    )
 
     def init_options(self):
         super(BingNews, self).init_options()
@@ -180,8 +234,11 @@ class BingNews(BingMultiple):
     def set_offset(self, offset=0):
         self.options.update({'News.Offset':offset})
 
-    def set_sortby(self, sortby='Relevance'):
+    def set_sortby(self, sortby='Date'):
         self.options.update({'News.SortBy':sortby})
+
+    def set_category(self, category):
+        self.options.update({'News.Category':category})
 
 class BingNewsRelated(BingNews):
 
@@ -214,6 +271,7 @@ class BingWeb(BingMultiple):
         })
 
     def set_count(self, count=10):
+        if count > 50: count=50 #we have to hardcode it because if count>50 Bing return error
         self.options.update({'Web.Count':count})
 
     def set_offset(self, offset=0):
@@ -231,6 +289,7 @@ class BingImage(BingWeb):
         })
 
     def set_count(self, count=10):
+        if count > 50: count=50 #we have to hardcode it because if count>50 Bing return error
         self.options.update({'Image.Count':count})
 
     def set_offset(self, offset=0):
@@ -249,12 +308,17 @@ class BingVideo(BingWeb):
         self.options.update({
             'Sources':'Video',
         })
+        self.set_sortby()
 
     def set_count(self, count=10):
+        if count > 50: count=50 #we have to hardcode it because if count>50 Bing return error
         self.options.update({'Video.Count':count})
 
     def set_offset(self, offset=0):
         self.options.update({'Video.Offset':offset})
+
+    def set_sortby(self, sortby='Date'):
+        self.options.update({'Video.SortBy':sortby})
 
 def make_map(adict):
     """
@@ -406,14 +470,15 @@ class AdvancedSearch(models.Model):
 
 class SearchApi(models.Model):
     SEARCH_MODELS = (
-        ('BingNews','Bing News'),
         ('BingWeb','Bing Web'),
+        ('BingNews','Bing News'),
+        ('BingNewsRelated', 'Bing News+Related'),
+        ('BingNewsRelatedSpell', 'Bing News+Related+Spell'),
         ('BingImage','Bing Image'),
         ('BingVideo','Bing Video'),
         ('TwitterSearch','Twitter Search'),
         ('GoogleSearch','Google Search'),
-        ('BingNewsRelated', 'Bing News+Related'),
-        ('BingNewsRelatedSpell', 'Bing News+Related+Spell'),
+        ('YqlSearch','Yahoo Query Language Search'),
     )
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
