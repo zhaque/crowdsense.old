@@ -43,6 +43,15 @@ class PipeSearch(BaseSearch, pipes.Pipe):
     def set_adult(self, adult=''):
         pass
 
+    def set_longitude(self, longitude):
+        pass
+
+    def set_latitude(self, latitude):
+        pass
+
+    def set_radius(self, radius):
+        pass
+
     def raw_fetch(self, query, count=None, offset=None, market=None, version=None, adult=None):
         self.set_query(query)
         if count:
@@ -158,6 +167,18 @@ class BingMultiple(PipeSearch):
 
     def set_version(self, version='2.2'):
         self.options.update({'Version':version})
+
+    def set_longitude(self, longitude):
+        if longitude:
+            self.options.update({'Longitude':longitude})
+
+    def set_latitude(self, latitude):
+        if latitude:
+            self.options.update({'Latitude':latitude})
+
+    def set_radius(self, radius):
+        if radius:
+            self.options.update({'Radius':radius})
 
     def get_result(self, response):
         if response and hasattr(response, "SearchResponse"):
