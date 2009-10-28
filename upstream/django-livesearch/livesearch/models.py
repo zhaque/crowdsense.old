@@ -121,6 +121,9 @@ class GoogleSearch(PipeSearch):
 class TwitterSearch(PipeSearch):
     uri = "http://search.twitter.com/search.json"
     cache_expiry = 300000
+    longitude = None
+    latitude = None
+    radius = None
 
     def set_query(self, query):
         self.options.update({'q':query})
@@ -134,8 +137,25 @@ class TwitterSearch(PipeSearch):
         page = int(offset/self.count) + 1
         self.options.update({'page':page})
 
+    def set_longitude(self, longitude):
+        self.longitude = longitude
+        self.geocode()
+
+    def set_latitude(self, latitude):
+        self.latitude = latitude
+        self.geocode()
+
+    def set_radius(self, radius):
+        self.radius = radius
+        self.geocode()
+
+    def set_geocode(self):
+        if self.longitude and self.latitude and self.radius:
+            geocode = '%s,%s,%s' % (self.latitude, self.longitude, self.radius)
+            self.options.update({'geocode':geocode})
+
     def set_market(self, market='en-US'):
-        self.options.update({'Market':market[:2]})
+        self.options.update({'lang':market[:2]})
 
     def get_result(self, response):
         res = dict()
