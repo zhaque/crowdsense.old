@@ -160,6 +160,7 @@ _default_css_files = ('yui-app-theme/yuiapp.css',
                       'authopenid/css/openid.css',
                       'uni_form/uni-form-generic.css',
                       'uni_form/uni-form.css',
+                      'saaskit/css/default.css',
                       )
 
 COMPRESS_CSS = {                        # different themes for MUAs
