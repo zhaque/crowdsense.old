@@ -118,7 +118,7 @@ def tracker(request, tracker_id=None):
           jscode += 'data.setValue(%d, %d, %d);\n' % (j, 0, stats.total_7days)
           j += 1
         context_vars['jscode'] = jscode
-
+	context_vars['apikey'] = settings.GOOGLEAPI
     return direct_to_template(request, template='stats.html', extra_context=context_vars)
 
 @login_required
