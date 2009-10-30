@@ -197,13 +197,13 @@ def mentions_js(request, query, filter_query=None):
     str = 'var mentions = %s' % str
     return HttpResponse(str, mimetype="text/javascript")
 
-def tracker_mentions_map(request, tracker_id):
-    tracker = Tracker.objects.get(id=tracker_id)
-    context = {'tracker': tracker}
-    return mentions_map(request, context)
-
-def mentions_map(request, context = {}):
-    context['apikey'] = settings.GOOGLEAPI
-    return direct_to_template(request, template='map.html', extra_context=context)
+#def tracker_mentions_map(request, tracker_id):
+#    tracker = Tracker.objects.get(id=tracker_id)
+#    context = {'tracker': tracker}
+#    return mentions_map(request, context)
+#
+#def mentions_map(request, context = {}):
+#    context['apikey'] = settings.GOOGLEAPI
+#    return direct_to_template(request, template='map.html', extra_context=context)
 
 
